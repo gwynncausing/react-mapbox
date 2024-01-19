@@ -11,11 +11,9 @@ describe("template spec", () => {
   it("display sidebar with property details when marker clicked", () => {
     cy.get('[data-test="map-wrapper"]')
       .should('not.have.class', 'sidebar-open')
-    cy.wait(5000)
     cy.get('[data-test="marker-0"]')
       .first()
       .click({force: true});
-    cy.wait(5000)
     cy.get('[data-test="map-wrapper"]')
       .should('have.class', 'sidebar-open')
     cy.contains("8 CLOVERLEIGH AVENUE EMERALD 3782"); // full_address
@@ -26,7 +24,7 @@ describe("template spec", () => {
       .should('not.have.class', 'sidebar-open')
   });
 
-  it.only("be able to filter by location", () => {
+  it("be able to filter by location", () => {
     cy.get('[data-test="filters"]')
       .should('exist')
     cy.get('[data-test="filters"]')
