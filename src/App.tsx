@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useRef } from 'react';
 import './App.css'
+import 'mapbox-gl/dist/mapbox-gl.css'; 
+import mapboxgl, { Map as MapboxMap, NavigationControl, LngLatLike, Marker } from "mapbox-gl";
+import properties from './assets/properties.json'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const mapContainer = useRef(null);
+  const lng = 145.449895817713;
+  const lat = -37.9373447811622;
+  const zoom = 8;  
+
+  const publicKey = import.meta.env.VITE_PUBLIC_KEY;
+  mapboxgl.accessToken = publicKey;
+
+  useEffect(() => {
+    const map = new MapboxMap({
+      container: mapContainer.current!,
+      style: 'mapbox://styles/mapbox/streets-v12',
+      center: [lng, lat] as LngLatLike,
+      zoom: zoom
+    });
+
+    properties.map((property) => {
+      const marker = new Marker().setLngLat([property.longitude, property.latitude])
+      marker.addTo(map)
+
+      marker.getElement().addEventListener("click", () => {
+        map.easeTo({
+          center: [property.longitude, property.latitude],
+          duration: 1000,
+        });
+      });
+    });
+    console.log(map);
+
+    map.addControl(new NavigationControl(), "top-right");
+    return () => map.remove();
+  });
+
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <div ref={mapContainer} className="map-container" />
+    </div>
+  );
 }
 
 export default App
