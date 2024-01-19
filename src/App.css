@@ -1,5 +1,6 @@
 body {
   font-size: 12px;
+  position: relative;
 }
 
 .map-container {
@@ -44,14 +45,6 @@ body {
   margin-bottom: 8px;
 }
 
-.sidebar-open .mapboxgl-ctrl-top-right {
-  right: 340px;
-}
-
-.sidebar-open .sidebar {
-  right: 0;
-}
-
 table.content {
   border-collapse: collapse;
 }
@@ -66,4 +59,29 @@ table.content td.label {
 
 table.content tr {
   border-bottom: 1px solid #dedede;
+}
+
+@media (min-width: 577px) {
+  .sidebar-open .mapboxgl-ctrl-top-right {
+    right: 340px;
+  }
+
+  .sidebar-open .sidebar {
+    right: 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .sidebar {
+    top: 100vh;
+    width: unset;
+    left: 0;
+    right: 0;
+    transition: top ease 400ms;
+  }
+
+  .sidebar-open .sidebar {
+    top: 65vh;
+    z-index: 2;
+  }
 }
