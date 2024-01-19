@@ -1,0 +1,27 @@
+[
+  {
+    "code": 311,
+    "name": "CARDINIA",
+    "long_name": "CARDINIA SHIRE"
+  },
+  {
+    "code": 300,
+    "name": "ALPINE",
+    "long_name": "ALPINE SHIRE"
+  },
+  {
+    "code": 312,
+    "name": "CASEY",
+    "long_name": "CASEY CITY"
+  },
+  {
+    "code": 352,
+    "name": "MORNINGTON PENINSULA",
+    "long_name": "MORNINGTON PENINSULA SHIRE"
+  },
+  {
+    "code": 374,
+    "name": "WODONGA",
+    "long_name": "WODONGA CITY"
+  }
+]
