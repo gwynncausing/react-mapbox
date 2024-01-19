@@ -31,7 +31,7 @@ body {
   width: 300px;
   display: flex;
   flex-direction: column;
-  z-index: 1;
+  z-index: 2;
 }
 
 .sidebar .close-button {
@@ -82,6 +82,5 @@ table.content tr {
 
   .sidebar-open .sidebar {
     top: 65vh;
-    z-index: 2;
   }
 }
