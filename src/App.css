@@ -22,7 +22,7 @@ body {
   position: absolute;
   bottom: 0;
   top: 0;
-  right: -324px;
+  right: -325px;
   background: #fbfbfb;
   color: #0b0b0b;
   padding: 12px;
@@ -30,6 +30,7 @@ body {
   width: 300px;
   display: flex;
   flex-direction: column;
+  z-index: 1;
 }
 
 .sidebar .close-button {

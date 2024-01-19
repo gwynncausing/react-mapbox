@@ -30,6 +30,7 @@ function App() {
 
   useEffect(() => {
     initializeMap()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const initializeMap = () => {
@@ -56,15 +57,16 @@ function App() {
 
     removeMarkers();
     
-    const newMarkers = newProperties.map((property) => {
+    const newMarkers = newProperties.map((property, propertyIndex) => {
       const marker = new Marker().setLngLat([property.longitude, property.latitude]).addTo(newMap);
       marker.getElement().addEventListener("click", () => {
-        const isOffsetCenter = true;
-        const longitude = property.longitude + (isOffsetCenter ? .5 : 0)
+        const longitude = property.longitude
         const latitude = property.latitude
         setMapCenter(longitude, latitude, newMap);
         setSelectedProperty(property as Property)
       });
+      marker.getElement().setAttribute('data-test', 'marker-' + propertyIndex);
+      marker.getElement().setAttribute('data-test-postcode', 'postcode-' + property.postcode);
       return marker;
     });
 
@@ -106,12 +108,12 @@ function App() {
 
 
   return (
-    <div className={`${selectedProperty ? 'sidebar-open' : ''}`}>
-      <div ref={mapContainer} className="map-container" />
+    <div data-test="map-wrapper" className={`${selectedProperty ? 'sidebar-open' : ''}`}>
+      <div data-test="map" ref={mapContainer} className="map-container" />
 
       <div className='filter-wrapper'>
-        <select name="filters" id="filters" onChange={handleFiltersChange}>
-          <option value=""></option>
+        <select data-test="filters" name="filters" id="filters" onChange={handleFiltersChange}>
+          <option value="">Filter by Location</option>
           {lgas.map(item => (
             <option value={item.code} key={item.code}>{item.long_name}</option>
           ))}
@@ -121,7 +123,7 @@ function App() {
       <div className="sidebar">
         {selectedProperty && 
           <>
-            <a href="#" onClick={handleCloseSidebar} className='close-button'>x</a>
+            <a data-test="close-button" href="#" onClick={handleCloseSidebar} className='close-button'>x</a>
             <table className="content">
               <tbody>
                 <tr>
