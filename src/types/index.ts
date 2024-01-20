@@ -9,6 +9,12 @@ export interface Property {
   postcode: string;
 }
 
+export interface LGA {
+  code: number;
+  name: string;
+  long_name: string;
+}
+
 export interface UseMapProps {
   mapContainer: React.MutableRefObject<null>;
   defaults: {

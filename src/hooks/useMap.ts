@@ -7,6 +7,7 @@ import mapboxgl, {
 } from "mapbox-gl";
 import properties from "../assets/properties.json";
 import { Property, UseMapProps } from "../types";
+import { useFetchMock } from "./useFetchMock";
 
 
 const useMap = ({ mapContainer, defaults }: UseMapProps) => {
@@ -37,7 +38,7 @@ const useMap = ({ mapContainer, defaults }: UseMapProps) => {
   };
 
   const addNewMarkers = (
-    newProperties: Property[],
+    newProperties: Property[] | undefined,
     existingMap?: MapboxMap
   ) => {
     const newMap =
@@ -51,25 +52,33 @@ const useMap = ({ mapContainer, defaults }: UseMapProps) => {
 
     removeMarkers();
 
-    const newMarkers = newProperties.map((property, propertyIndex) => {
-      const marker = new Marker()
-        .setLngLat([property.longitude, property.latitude])
-        .addTo(newMap);
-      marker.getElement().addEventListener("click", () => {
-        const longitude = property.longitude;
-        const latitude = property.latitude;
-        setMapCenter(longitude, latitude, newMap);
-        setSelectedProperty(property as Property);
+    if (newProperties && newProperties.length) {
+      const newMarkers = newProperties.map((property, propertyIndex) => {
+        const marker = new Marker()
+          .setLngLat([property.longitude, property.latitude])
+          .addTo(newMap);
+        marker.getElement().addEventListener("click", () => {
+          const longitude = property.longitude;
+          const latitude = property.latitude;
+          setMapCenter(longitude, latitude, newMap);
+          setSelectedProperty(property as Property);
+        });
+        marker
+          .getElement()
+          .setAttribute("data-test", "marker-" + propertyIndex);
+        marker
+          .getElement()
+          .setAttribute("data-test-postcode", "postcode-" + property.postcode);
+        return marker;
       });
-      marker.getElement().setAttribute("data-test", "marker-" + propertyIndex);
-      marker
-        .getElement()
-        .setAttribute("data-test-postcode", "postcode-" + property.postcode);
-      return marker;
-    });
 
-    setMapCenter(newProperties[0].longitude, newProperties[0].latitude, newMap);
-    setMarkers(newMarkers);
+      setMapCenter(
+        newProperties[0].longitude,
+        newProperties[0].latitude,
+        newMap
+      );
+      setMarkers(newMarkers);
+    }
     return newMap;
   };
 
@@ -86,17 +95,18 @@ const useMap = ({ mapContainer, defaults }: UseMapProps) => {
     setMarkers([]);
   };
 
-  const handleFiltersChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleFiltersChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const value = event.target.value;
     setSelectedProperty(undefined);
-    if (!value) {
-      addNewMarkers(properties);
-      return;
-    }
-    const newProperties = properties.filter(
-      (property) => property.lga_code === Number(value)
-    );
-    addNewMarkers(newProperties);
+
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const newProperties = await useFetchMock({
+      route: "/properties",
+      filters: {
+        code: Number(value),
+      },
+    });
+    addNewMarkers(newProperties as Property[]);
   };
 
   const setMapCenter = (
