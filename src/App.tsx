@@ -27,7 +27,7 @@ function App() {
   })
 
   return (
-    <div data-test="map-wrapper" className={`${selectedProperty ? 'sidebar-open' : ''}`}>
+    <div data-test="map-wrapper" className={`${selectedProperty ? 'sidebar-open map-wrapper' : ' map-wrapper'}`}>
       <div data-test="map" ref={mapContainer} className="map-container" />
 
       <FiltersComponent handleFiltersChange={handleFiltersChange}/>
